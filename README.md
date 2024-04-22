@@ -1,0 +1,2 @@
+# IMGSTITCH
+Image stitching experiments
