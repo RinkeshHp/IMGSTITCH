@@ -1,0 +1,6 @@
+The Knapsack Problem & Genetic Algorithms - Computerphile https://www.youtube.com/watch?v=MacVqujSXWE&ab_channel=Computerphile
+What are Genetic Algorithms? https://www.youtube.com/watch?v=XP2sFzp2Rig&ab_channel=argonaut
+Genetic Algorithms Explained By Example https://www.youtube.com/watch?v=uQj5UNhCPuo&ab_channel=KieCodes
+
+
+
