@@ -2,5 +2,5 @@ The Knapsack Problem & Genetic Algorithms - Computerphile https://www.youtube.co
 What are Genetic Algorithms? https://www.youtube.com/watch?v=XP2sFzp2Rig&ab_channel=argonaut
 Genetic Algorithms Explained By Example https://www.youtube.com/watch?v=uQj5UNhCPuo&ab_channel=KieCodes
 
-
+https://github.com/OpenStitching/stitching
 Fast and Robust Image Stitching Algorithm for many images in Python? https://stackoverflow.com/questions/64659657/fast-and-robust-image-stitching-algorithm-for-many-images-in-python
