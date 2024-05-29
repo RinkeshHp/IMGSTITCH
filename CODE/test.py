@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 from skimage.registration import phase_cross_correlation
+import time
 
 
 def read_in_memory(folder_path, crop_percent={"x": 0, "y": 0}):
@@ -40,7 +41,7 @@ def read_in_memory(folder_path, crop_percent={"x": 0, "y": 0}):
 
 
 img_data = read_in_memory(
-    "/home/rinkesh/Desktop/Stiching-calibration/scan14092023/scan14092023/2.50",
+    "/home/rinkesh/Desktop/FCRIT_FYP-main/0.05_step_5x_pt1/5.00",
 )
 
 
@@ -67,12 +68,13 @@ def get_homography_ransac(img1, img2):
     homography_matrix, _ = cv2.findHomography(points1, points2, cv2.RANSAC)
     homography_matrix[0][2] = -1 * homography_matrix[0][2]
     homography_matrix[1][2] = -1 * homography_matrix[1][2]
-
+    print(f"homo ({homography_matrix[1][2]}, {homography_matrix[0][2]})")
     return homography_matrix
 
 
 def get_homography_pxc(img1, img2):
     shift, _, _ = phase_cross_correlation(img1, img2)
+    print(f"pxc {shift}")
     return np.array([[1, 0, shift[1]], [0, 1, shift[0]], [0, 0, 1]])
 
 
@@ -82,7 +84,9 @@ def compute_homography_matrix(img_data, sample_count=5):
     homography = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
     img_list = list(img_data["ip"].keys())
     img_indices = np.arange(0, len(img_list) - 1)
-    sampled_imgs = np.random.choice(img_indices, sample_count, replace=False)
+    sampled_imgs = [0]
+    if len(img_list) > 2:
+        sampled_imgs = np.random.choice(img_indices, sample_count, replace=False)
     img_pairs = []
     for img_index in sampled_imgs:
         """create image pairs"""
@@ -95,12 +99,15 @@ def compute_homography_matrix(img_data, sample_count=5):
     homography = np.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
     for img_pair in img_pairs:
         h = get_homography_ransac(img_pair[0], img_pair[1])
+        # print(f"ransac {h}")
         homography = homography + h
 
-    for img_pair in img_pairs:
-        h = get_homography_pxc(img_pair[0], img_pair[1])
-        homography = homography + h
-    homography = homography / (2 * sample_count)
+    # for img_pair in img_pairs:
+    #     h = get_homography_pxc(img_pair[0], img_pair[1])
+    #     # print(f"pxc {h}")
+    #     homography = homography + h
+    homography = homography / (sample_count)
+    # print(homography)
 
     return homography
 
@@ -147,7 +154,9 @@ def stitcher(img_data, homography):
 
 
 # print(compute_homography_matrix(img_data, 2))
-stitcher(img_data, compute_homography_matrix(img_data, 4))
+start = time.time()
+stitcher(img_data, compute_homography_matrix(img_data, sample_count=5))
+print(f"{time.time()-start}")
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
