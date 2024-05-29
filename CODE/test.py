@@ -39,46 +39,8 @@ def read_in_memory(folder_path, crop_percent={"x": 0, "y": 0}):
     return img_data
 
 
-def extract_features(img_data):
-    """feature extraction for raw images"""
-    h, w = img_data["ip"]["36.50_13.50_3.53.png"]["raw"].shape[:2]
-    y = cv2.resize(
-        img_data["ip"]["36.50_13.50_3.53.png"]["raw"],
-        (int(0.1 * w), int(0.1 * h)),
-        interpolation=cv2.INTER_NEAREST,
-    )
-    # x = cv2.equalizeHist(y)
-    x = cv2.adaptiveThreshold(
-        y, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-    )
-    # x = cv2.GaussianBlur(x, (5, 5), 100)
-    # x = cv2.equalizeHist(x)
-
-    # x = cv2.threshold(
-    #     cv2.GaussianBlur(
-    #         cv2.equalizeHist(y),
-    #         (111, 111),
-    #         100,
-    #     ),
-    #     0,
-    #     255,
-    #     cv2.THRESH_OTSU | cv2.THRESH_BINARY_INV,
-    # )
-    # print(x[0])
-    cv2.imshow(
-        "ss",
-        x,
-    )
-    cv2.imshow("x", cv2.Canny(x, 100, 255))
-
-    # for img in img_data["ip"]:
-    #     print(img_data["ip"][img]["raw"])
-
-    return img_data
-
-
 img_data = read_in_memory(
-    "/home/rinkesh/Desktop/Stiching-calibration/sacn14092023_1/2.50",
+    "/home/rinkesh/Desktop/Stiching-calibration/scan14092023/scan14092023/2.50",
 )
 
 
@@ -144,8 +106,7 @@ def compute_homography_matrix(img_data, sample_count=5):
 
 
 def stitcher(img_data, homography):
-    """This will stitch the images based on the homography.
-    Working : select image1 as the starting image, image 2 as adjacent. Stitch them. Hold the stitched image in memory and image 1 = shifted window of original image size by homography translation and image 2 is next image"""
+    """This will stitch the images based on the homography (translation only)"""
     # Calculate dimensions of stitched image
     translation = {
         "x": round(homography[0][2]),
