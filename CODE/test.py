@@ -41,7 +41,7 @@ def read_in_memory(folder_path, crop_percent={"x": 0, "y": 0}):
 
 
 img_data = read_in_memory(
-    "/home/rinkesh/Desktop/FCRIT_FYP-main/0.05_step_5x_pt1/5.00",
+    "/home/rinkesh/Desktop/IMGSTITCH/2d/1",
 )
 
 
@@ -117,7 +117,9 @@ def stitcher(img_data, homography):
     # Calculate dimensions of stitched image
     translation = {
         "x": round(homography[0][2]),
+        # "x": 0,
         "y": round(homography[1][2]),
+        # "y": 0,
     }
     n = len(img_data["ip"])
     # calculate origin, since translations can be -ve, we need to shift the image coordinates
@@ -155,7 +157,7 @@ def stitcher(img_data, homography):
 
 # print(compute_homography_matrix(img_data, 2))
 start = time.time()
-stitcher(img_data, compute_homography_matrix(img_data, sample_count=5))
+stitcher(img_data, compute_homography_matrix(img_data, sample_count=2))
 print(f"{time.time()-start}")
 
 cv2.waitKey(0)
