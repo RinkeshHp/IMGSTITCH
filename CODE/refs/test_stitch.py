@@ -4,12 +4,17 @@ import imutils
 
 # Load images
 img1 = cv2.imread(
-    "/home/rinkesh/Desktop/Stiching-calibration/take3/2.50/1/36.70_13.50_3.53.png"
+    # "/home/rinkesh/Desktop/FCRIT_FYP-main/2.50/79.88_8.64.png"
+    # "/home/rinkesh/Desktop/FCRIT_FYP-main/2.50/79.88_17.28.png"
+    # "/home/rinkesh/Desktop/FCRIT_FYP-main/2.50/77.00_17.28.png"
     # "2.jpg"
+    "patches_named/0_0.png"
 )
 img2 = cv2.imread(
-    "/home/rinkesh/Desktop/Stiching-calibration/take3/2.50/1/36.50_13.50_3.53.png"
-    # "2.jpg"
+    # "/home/rinkesh/Desktop/Stiching-calibration/take3/2.50/1/36.50_13.50_3.53.png"
+    # "/home/rinkesh/Desktop/FCRIT_FYP-main/2.50/82.76_8.64.png"
+    # "/home/rinkesh/Desktop/FCRIT_FYP-main/2.50/82.76_17.28.png"
+    "patches_named/90_0.png"
 )
 # img1 = img1[94 * 1 :, 0:-1]
 # cv2.imshow("img1",img1)
@@ -18,8 +23,8 @@ img2 = cv2.imread(
 # Example homography matrix (replace with your actual homography matrix)
 H = np.array(
     [
-        [1.0, 0, -95 * 1],
-        [0, 1, +1],
+        [1.0, 0, 90],
+        [0, 1, 0],
         [0, 0, 1],
     ]
 )
@@ -88,6 +93,6 @@ blended_result = blend_images(result, mask)
 
 # Show the result
 cv2.imshow("Stitched Image", result)
-# cv2.imwrite("2.jpg", result)
+cv2.imwrite("2.jpg", result)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

@@ -11,15 +11,17 @@ import imutils
 
 img1 = cv2.imread(
     # "/home/rinkesh/Desktop/Stiching-calibration/sacn14092023_1/2.50/43.50_13.50_3.53.png"
-    "/home/rinkesh/Desktop/Stiching-calibration/take1/2.50/38.25_13.50_3.53.png",
+    # "/home/rinkesh/Desktop/Stiching-calibration/take1/2.50/38.25_13.50_3.53.png",
+    "/home/rinkesh/Desktop/FCRIT_FYP-main/2.50/79.88_8.64.png",
     cv2.IMREAD_GRAYSCALE,
 )
 img2 = cv2.imread(
-    "/home/rinkesh/Desktop/Stiching-calibration/take1/2.50/38.50_13.50_3.53.png",
+    # "/home/rinkesh/Desktop/Stiching-calibration/take1/2.50/38.50_13.50_3.53.png",
+    "/home/rinkesh/Desktop/FCRIT_FYP-main/2.50/82.76_8.64.png",
     cv2.IMREAD_GRAYSCALE,
 )
-img1 = imutils.rotate_bound(img1, 90)
-img2 = imutils.rotate_bound(img2, 90)
+# img1 = imutils.rotate_bound(img1, 90)
+# img2 = imutils.rotate_bound(img2, 90)
 print(img1.shape)
 print(img2.shape)
 shift, error, diffphase = phase_cross_correlation(img1, img2)

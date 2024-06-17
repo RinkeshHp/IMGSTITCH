@@ -4,12 +4,16 @@ import imutils
 
 # Load the images
 image1 = cv2.imread(
-    "/home/rinkesh/Desktop/Stiching-calibration/take3/2.50/1/36.70_13.50_3.53.png"
-    # "2.jpg"
+    # "patches/patch_0_pos_0_0.png"  # "2.jpg"
+    # "/home/rinkesh/Desktop/data/IMGSTITCH-master/yonly/3/114.50_21.00_1.51.png"
+    "patches_named/0_0.png"
+
     # "registered.jpg",
 )
 image2 = cv2.imread(
-    "/home/rinkesh/Desktop/Stiching-calibration/take3/2.50/1/36.50_13.50_3.53.png"
+    # "patches/patch_1_pos_0_50.png"
+    "patches_named/90_0.png"
+    # "/home/rinkesh/Desktop/data/IMGSTITCH-master/yonly/3/114.50_19.00_1.51.png"
 )
 # image1 = image1[200 : image1.shape[0] - 200, 200 : image1.shape[1] - 200]
 # image2 = image2[200 : image2.shape[0] - 200, 200 : image2.shape[1] - 200]
@@ -65,6 +69,9 @@ homography_matrix, mask = cv2.findHomography(points1, points2, cv2.RANSAC)
 # Use homography to warp image2 to image1
 height, width, channels = image1.shape
 print(homography_matrix)
+homography_matrix[0][2] = -homography_matrix[0][2]
+homography_matrix[1][2] = -homography_matrix[1][2]
+
 registered_image = cv2.warpPerspective(image2, homography_matrix, (width, height))
 # cv2.imwrite("registered.jpg", registered_image)
 

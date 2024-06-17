@@ -3,16 +3,30 @@ import cv2
 import numpy as np
 from skimage.registration import phase_cross_correlation
 import time
+import re
 
 
 def read_in_memory(folder_path, crop_percent={"x": 0, "y": 0}):
     """read all images from folder and hold them in memory(numpy array) for further processing Optionally performs cropping as well if specified as {"x": %cropping in width, "y": %cropping in height}. Returned data structure (img_data) will be used for output as well."""
-    img_data = {"ip": {}, "op": {}}
+    img_data = {
+        "ip": {
+            "x": {},
+            "y": {},
+        },
+        "op": {
+            "x": {},
+            "y": {},
+        },
+    }
 
     img_ext = (".jpg", ".jpeg", ".png", ".bmp")
 
     for filename in sorted(os.listdir(folder_path)):
         if filename.lower().endswith(img_ext):
+            # print(filename)
+            # find x,y coordinates and zoom of current image and store it accordingly in img_data
+            # x, y, zoom = filename.split("_")
+
             file_path = os.path.join(folder_path, filename)
             img = cv2.imread(file_path)
             if crop_percent:
@@ -40,9 +54,35 @@ def read_in_memory(folder_path, crop_percent={"x": 0, "y": 0}):
     return img_data
 
 
-img_data = read_in_memory(
-    "/home/rinkesh/Desktop/IMGSTITCH/2d/1",
-)
+def read_in_memory_2d(folder_path):
+    """read all images from folder and hold them in memory(numpy array) for further processing . Returned data structure (img_data) will be used for output as well."""
+    img_data = {
+        "ip": {
+            "x": {},
+            "y": {},
+        },
+        "op": {
+            "x": {},
+            "y": {},
+        },
+    }
+
+    img_ext = (".jpg", ".jpeg", ".png", ".bmp")
+
+    for filename in sorted(os.listdir(folder_path)):
+        if filename.lower().endswith(img_ext):
+            # find x,y coordinates and zoom of current image and store it accordingly in img_data. Stitching first in X direction(group by Y) and then in Y direction
+            t = re.split(r"_|\.\D", filename)
+            x, y = t[:2]
+            # x, y = filename.split("_")[:2]
+            file_path = os.path.join(folder_path, filename)
+            img = cv2.imread(file_path)
+
+            if y not in img_data["ip"]["y"]:
+                img_data["ip"]["y"][y] = {}
+            img_data["ip"]["y"][y][filename] = img
+
+    return img_data
 
 
 def get_homography_ransac(img1, img2):
@@ -68,13 +108,13 @@ def get_homography_ransac(img1, img2):
     homography_matrix, _ = cv2.findHomography(points1, points2, cv2.RANSAC)
     homography_matrix[0][2] = -1 * homography_matrix[0][2]
     homography_matrix[1][2] = -1 * homography_matrix[1][2]
-    print(f"homo ({homography_matrix[1][2]}, {homography_matrix[0][2]})")
+    # print(f"homo ({homography_matrix[1][2]}, {homography_matrix[0][2]})")
     return homography_matrix
 
 
 def get_homography_pxc(img1, img2):
     shift, _, _ = phase_cross_correlation(img1, img2)
-    print(f"pxc {shift}")
+    # print(f"pxc {shift}")
     return np.array([[1, 0, shift[1]], [0, 1, shift[0]], [0, 0, 1]])
 
 
@@ -156,8 +196,15 @@ def stitcher(img_data, homography):
 
 
 # print(compute_homography_matrix(img_data, 2))
+img_data = read_in_memory(
+    # "/home/rinkesh/Desktop/FCRIT_FYP-main/2.53",
+    # "/home/rinkesh/Desktop/FCRIT_FYP-main/0.05_step_5x_pt1/5.00"
+    "/home/rinkesh/Desktop/data/IMGSTITCH-master/testx"
+)
+
 start = time.time()
-stitcher(img_data, compute_homography_matrix(img_data, sample_count=2))
+h = compute_homography_matrix(img_data, sample_count=10)
+stitcher(img_data, h)
 print(f"{time.time()-start}")
 
 cv2.waitKey(0)
